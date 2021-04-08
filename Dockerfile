@@ -1,15 +1,17 @@
-FROM alpine:latest
+FROM alpine:edge
 
-ENV LISTEN_IP 0.0.0.0
-ENV LISTEN_PORT 80
-ENV SSH_HOST localhost
-ENV SSH_PORT 22
-
-RUN apk update && \
-    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ sslh && \
-    rm -rf /var/cache/apk/*
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ sslh
 
 ADD entry.sh /usr/local/bin/entry.sh
 RUN chmod +x /usr/local/bin/entry.sh
+
+ENV LISTEN_IP=0.0.0.0 \
+    LISTEN_PORT=80 \
+    SSL_HOST=localhost \
+    SSL_PORT=443 \
+    OPENVPN_HOST=localhost \
+    OPENVPN_PORT=1194 \
+    SSH_HOST=localhost \
+    SSH_PORT=22
 
 ENTRYPOINT ["/usr/local/bin/entry.sh"]
